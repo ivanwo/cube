@@ -29,9 +29,7 @@
 
 			import { OrbitControls } from './OrbitControls.js';
 
-			let camera, controls, scene, renderer;
-
-			let message = "holy fucking shit lmaooooo";
+			let camera, controls, scene, renderer, cube;
 
 			init();
 			//render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -64,12 +62,10 @@
 
 				// Set to false to disable use of the keys
 				controls.enableKeys = true;
+				controls.enablePan = false;
 
 				// The four arrow keys
 				controls.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
-
-				//controls.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
-				// controls.target = objectCameraRotatesAround;
 
 				controls.minDistance = 100;
 				controls.maxDistance = 500;
@@ -77,17 +73,19 @@
 				controls.maxPolarAngle = Math.PI / 2;
 
 				// world
-				document.getElementById("sub-info").innerHTML = "Holy fucking shit lmaoooo";
+				document.getElementById("sub-info").innerHTML = "holy fucking shit lmaoooo";
 				document.getElementById("sub-sub-info").innerHTML = "use arrow keys to rotate around and zoom in on the cube";
 
 				var cubeGeometry = new THREE.BoxGeometry (100,100,100);
     			var cubeMaterial = new THREE.MeshPhongMaterial ({color: 0xffffff, flatShading: true});
-    			let cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
+    			cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
 
     			cube.position.set (0, 0, 0);
     			scene.add (cube);
 
 				// lights
+
+				//controls.target = {x:cube.x, y:cube.y, z:cube.z};
 
 				const dirLight1 = new THREE.DirectionalLight( 0xffffff );
 				dirLight1.position.set( -1, 1, 1 );
@@ -120,7 +118,7 @@
 				requestAnimationFrame( animate );
 
 				controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-				
+				//console.log(controls);
 
 				render();
 

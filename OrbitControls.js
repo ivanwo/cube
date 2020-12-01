@@ -1007,7 +1007,7 @@ var OrbitControls = function ( object, domElement ) {
 
 	function onKeyDown( event ) {
 
-		if ( scope.enabled === false || scope.enableKeys === false || scope.enablePan === false ) return;
+		if ( scope.enabled === false || scope.enableKeys === false  ) return;
 
 		handleKeyDown( event );
 
