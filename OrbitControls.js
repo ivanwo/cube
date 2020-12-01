@@ -1006,7 +1006,7 @@ var OrbitControls = function ( object, domElement ) {
 	}
 
 	function onKeyDown( event ) {
-
+        // ~ removed pan enabled from if statement
 		if ( scope.enabled === false || scope.enableKeys === false  ) return;
 
 		handleKeyDown( event );
