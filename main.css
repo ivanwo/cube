@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+body
+{
+    overflow:hidden;
+    margin: 0;
+}
+#info
+{
+    position: fixed;
+    pointer-events: none;
+    margin: 20px;
+}
+#sub-info
+{
+    color: blue;
+    font-size: 2em;
+    margin: 0;
+    font-family: "Lobster";
+}
+#sub-sub-info
+{
+    color: lightseagreen;
+    font-size: 1em;
+    font-family: "Lobster";
+}
