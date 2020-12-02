@@ -125,52 +125,10 @@
 
 				const ambientLight = new THREE.AmbientLight( 0x222222 );
 				scene.add( ambientLight );
-				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
-				//window.addEventListener('keydown', onKeyDown, false);
-				//window.addEventListener('keyup', onKeyUp, false);
 				window.addEventListener('click', clickHandler, false);
-				
-				//controls.target.set(cube.x, cube.y, cube.z);
 			}
-			/*
-			function onKeyDown(event){
-				switch ( event.keyCode ) {
-
-					case 87:  moveForward = true; break;	//W
-					case 83:  moveBackward = true; break;	//S
-					case 65:  moveLeft = true; break;		//A
-					case 68:  moveRight = true; break;		//D
-				}
-			}
-			function onKeyUp(event){
-				switch ( event.keyCode ) {
-
-					case 87:  moveForward = false; break;	//W
-					case 83:  moveBackward = false; break;	//S
-					case 65:  moveLeft = false; break;		//A
-					case 68:  moveRight = false; break;		//D
-				}
-			}
-			function updatePosition()
-			{
-				let ex = (controls.target.x >=0 ? 1: -1);
-				let why = (controls.target.y >=0 ? -1: 1);
-				if(moveForward)
-				{
-					//console.log('fw');
-				console.log(controls.target);
-					cube.position.x += ex;
-					cube.position.y -= why;
-				}if(moveBackward)
-				{
-					//console.log('fw');
-					cube.position.x -= ex;
-					cube.position.y += why;
-				}
-			}*/
-
 			function clickHandler(event)
 			{
 				//console.log("!");
@@ -199,6 +157,9 @@
 			}
 			function animate() {
 				//updatePosition();
+				// TODO:
+				// calculate difference between x, y, and z of the marker & follower
+				// if different, move at a fixed speed to close the gap 
 				requestAnimationFrame( animate );
 
 				controls.target.set(cube.position.x, cube.position.y, cube.position.z);
