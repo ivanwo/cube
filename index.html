@@ -27,10 +27,9 @@
 		<script type="module">
 
 			import * as THREE from './three.module.js';
-
 			import { OrbitControls } from './OrbitControls.js';
 
-			let camera, controls, scene, renderer, cube, raycaster, INTERSECTED;
+			let camera, controls, scene, renderer, cube, raycaster, INTERSECTED, marker, follower;
 			let mouse = new THREE.Vector2();
 
 			let i = 0;
@@ -79,11 +78,21 @@
 				document.getElementById("sub-info").innerHTML = "holy fucking shit lmaoooo";
 				document.getElementById("sub-sub-info").innerHTML = "use arrow keys to rotate around and zoom in on the cube";
 
+				//marker & follower
+
+				var coneGeometry = new THREE.ConeGeometry( 4, 8, 6 );
+    			var coneMaterial = new THREE.MeshPhongMaterial ({color: "red", flatShading: true});
+				marker = new THREE.Mesh (coneGeometry, coneMaterial);
+    			coneMaterial = new THREE.MeshPhongMaterial ({color: "blue", flatShading: true});
+				follower = new THREE.Mesh(coneGeometry, coneMaterial);
+				follower.position.set(30, 0, 30);
+				scene.add(follower);
+
 				var cubeGeometry = new THREE.BoxGeometry (10,10,10);
     			var cubeMaterial = new THREE.MeshPhongMaterial ({color: 0xffffff, flatShading: true});
 				cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
 
-				cube.position.set (15, 0, 15);
+				//cube.position.set (15, 0, 15);
 				//cube.object.name = "cube";
 				scene.add (cube);
 				
@@ -116,7 +125,6 @@
 
 				const ambientLight = new THREE.AmbientLight( 0x222222 );
 				scene.add( ambientLight );
-
 				//
 
 				window.addEventListener( 'resize', onWindowResize, false );
@@ -162,10 +170,11 @@
 					cube.position.y += why;
 				}
 			}*/
+
 			function clickHandler(event)
 			{
-				console.log("!");
-				// get click's x/y position on the grid
+				//console.log("!");
+				// get click's x/y position on the grid and adds a red cube there
 				event.preventDefault();
 
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -173,32 +182,11 @@
 				raycaster.setFromCamera( mouse, camera );
 
 				const intersects = raycaster.intersectObjects( scene.children );
-				console.log(intersects);
-				if ( intersects.length > 0 ) {
-					var cubeGeometry = new THREE.BoxGeometry (10,10,10);
-    				var cubeMaterial = new THREE.MeshPhongMaterial ({color: "red", flatShading: true});
-					let marker = new THREE.Mesh (cubeGeometry, cubeMaterial);
+				//console.log(intersects);
+				if ( intersects.length == 1 ) {
 
-					marker.position.set (intersects[0].point.x, 0, intersects[0].point.z);
-					//cube.object.name = "cube";
+					marker.position.set (intersects[0].point.x, -1, intersects[0].point.z);
 					scene.add (marker);
-					if ( INTERSECTED != intersects[ 0 ].object ) {
-
-						//if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-						//console.log(INTERSECTED);
-
-						//INTERSECTED = intersects[ 0 ].object;
-						//INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-						//INTERSECTED.material.emissive.setHex( 0xff0000 );
-
-					}
-
-				} else {
-
-					//if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-					//console.log(INTERSECTED);
-					INTERSECTED = null;
-
 				}
 			}
 			function onWindowResize() {
@@ -214,22 +202,18 @@
 				requestAnimationFrame( animate );
 
 				controls.target.set(cube.position.x, cube.position.y, cube.position.z);
-				i++;
+				/*i++;
 				if(i<2){
 					console.log(controls);
 					console.log(cube);
-				}
+				}*/
 				controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
 				
-				
 				render();
-
 			}
 
 			function render() {
-
 				renderer.render( scene, camera );
-
 			}
 
 		</script>
