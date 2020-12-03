@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>geam cuub</title>
+		<title>gaem cuub</title>
 		<meta charset="utf-8">
-		<link href="./favicon.ico" rel="icon" type="image/x-icon" />
+		<link href="./img/favicon.ico" rel="icon" type="image/x-icon" />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
 	</head>
@@ -13,8 +13,8 @@
 			<h1 id="name-label">GAEM CUUB</h1>
 		</header>
 		<script type="module">
-			import * as THREE from './three.module.js';
-			import { OrbitControls } from './OrbitControls.js';
+			import * as THREE from './js/three.module.js';
+			import { OrbitControls } from './js/OrbitControls.js';
 
 			let camera, controls, scene, renderer, cube, raycaster, INTERSECTED, marker, follower, line;
 			let mouse = new THREE.Vector2();
@@ -33,7 +33,7 @@
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio*0.35 );
-				renderer.setSize( window.innerWidth, window.innerHeight-50 );
+				renderer.setSize( window.innerWidth, window.innerHeight);
 				document.body.appendChild( renderer.domElement );
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -83,7 +83,7 @@
 				cube.name = "dialog cube";
 				scene.add (cube);
 				
-				const gt = new THREE.TextureLoader().load( "./checker1.jpg" );
+				const gt = new THREE.TextureLoader().load( "./img/checker1.jpg" );
 				const gg = new THREE.PlaneBufferGeometry( 16000, 16000 );
 				const gm = new THREE.MeshPhongMaterial( { color: 0xffffff, map: gt } );
 
@@ -156,10 +156,10 @@
 			}
 			function onWindowResize() {
 
-				camera.aspect = window.innerWidth / window.innerHeight-50;
+				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight-50 );
+				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
 			function move()
