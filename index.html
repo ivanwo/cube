@@ -6,27 +6,12 @@
 		<link href="./favicon.ico" rel="icon" type="image/x-icon" />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="main.css">
-		<style>
-			body {
-				background-color: floralwhite;
-				color: #000;
-			}
-
-			a {
-				color: #f00; 
-			}
-		</style>
 	</head>
 
 	<body>
-		<div id="info">
-			<p id="sub-info">three.js</p>
-			<p id="sub-sub-info">three.js</p>
-		</div>
 		<header>
-			<button id="output-data">status update</button>
+			<h1 id="name-label">GAEM CUUB</h1>
 		</header>
-
 		<script type="module">
 			import * as THREE from './three.module.js';
 			import { OrbitControls } from './OrbitControls.js';
@@ -48,7 +33,7 @@
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio*0.35 );
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setSize( window.innerWidth, window.innerHeight-50 );
 				document.body.appendChild( renderer.domElement );
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -78,11 +63,7 @@
 
 				controls.maxPolarAngle = Math.PI / 2;
 
-				// world
-				document.getElementById("sub-info").innerHTML = "holy fucking shit lmaoooo";
-				document.getElementById("sub-sub-info").innerHTML = "check that messy cube, dog!";
-				document.getElementById("output-data").addEventListener('click', _=> {console.log(line);}, false);
-
+				// WORLD
 				//marker & follower
 
 				var coneGeometry = new THREE.ConeGeometry( 4, 8, 6 );
@@ -94,7 +75,7 @@
 				scene.add(follower);
 
 				line = new THREE.Line3();
-				position = 0;
+				position = 1;
 
 				var cubeGeometry = new THREE.BoxGeometry (10,10,10);
     			var cubeMaterial = new THREE.MeshPhongMaterial ({color: 0xffffff, flatShading: true});
@@ -132,16 +113,12 @@
 				const ambientLight = new THREE.AmbientLight( 0x222222 );
 				scene.add( ambientLight );
 
-				window.addEventListener( 'resize', onWindowResize, false );
+				window.addEventListener('resize', onWindowResize, false );
 				window.addEventListener('click', clickHandler, false);
 				window.addEventListener('mousemove', moveHandler, false);
 			}
 			function clickHandler(event)
 			{
-				//console.log("!");
-				// get click's x/y position on the grid and adds a red cube there
-				event.preventDefault();
-
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 				raycaster.setFromCamera( mouse, camera );
@@ -154,9 +131,11 @@
 					position = 0;
 					line.set(follower.position, marker.position);
 					scene.add (marker);
+					marker.visible = true;
 					// 
 				}
 				else if(intersects.length > 1){
+					console.log(intersects);
 					//	multiple items, 
 					//	special context clicks go here
 				}
@@ -177,10 +156,10 @@
 			}
 			function onWindowResize() {
 
-				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.aspect = window.innerWidth / window.innerHeight-50;
 				camera.updateProjectionMatrix();
 
-				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setSize( window.innerWidth, window.innerHeight-50 );
 
 			}
 			function move()
@@ -198,15 +177,13 @@
 					position += 0.01;
 				}
 			}
-			function outputData()
-			{
-				console.log(line);
-			}
 			function animate() {
 				// TODO:
 				//	normalize movement speed
 				//	make targety locationy thing disappear on arrival
 				//	context clicks deliver text
+				// IDEAS:
+				//	have a game object wrapper to hold attributes & objects
 				//	
 				requestAnimationFrame( animate );
 
@@ -221,6 +198,9 @@
 			}
 
 		</script>
-
+		<footer>
+			<h2>welcome to the gaem cuub! camera controls with WASD, click to move and investigate</h2>
+			<p>if you have any feedback, please forget it! </p>
+		</footer>
 	</body>
 </html>
