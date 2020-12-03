@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js modified key orbit controls </title>
+		<title>geam cuub</title>
 		<meta charset="utf-8">
 		<link href="./favicon.ico" rel="icon" type="image/x-icon" />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -23,14 +23,17 @@
 			<p id="sub-info">three.js</p>
 			<p id="sub-sub-info">three.js</p>
 		</div>
+		<header>
+			<button id="output-data">status update</button>
+		</header>
 
 		<script type="module">
-
 			import * as THREE from './three.module.js';
 			import { OrbitControls } from './OrbitControls.js';
 
-			let camera, controls, scene, renderer, cube, raycaster, INTERSECTED, marker, follower;
+			let camera, controls, scene, renderer, cube, raycaster, INTERSECTED, marker, follower, line;
 			let mouse = new THREE.Vector2();
+			let coefficient, position;
 
 			let i = 0;
 			init();
@@ -44,7 +47,7 @@
 				scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setPixelRatio( window.devicePixelRatio*0.35 );
 				renderer.setSize( window.innerWidth, window.innerHeight );
 				document.body.appendChild( renderer.domElement );
 
@@ -67,7 +70,8 @@
 				controls.enablePan = false;
 
 				// The four arrow keys
-				controls.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+				// arrow keys :  { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 } 
+				controls.keys = { LEFT: 65, UP: 87, RIGHT: 68, BOTTOM: 83 };
 
 				controls.minDistance = 100;
 				controls.maxDistance = 500;
@@ -76,7 +80,8 @@
 
 				// world
 				document.getElementById("sub-info").innerHTML = "holy fucking shit lmaoooo";
-				document.getElementById("sub-sub-info").innerHTML = "use arrow keys to rotate around and zoom in on the cube";
+				document.getElementById("sub-sub-info").innerHTML = "check that messy cube, dog!";
+				document.getElementById("output-data").addEventListener('click', _=> {console.log(line);}, false);
 
 				//marker & follower
 
@@ -88,12 +93,13 @@
 				follower.position.set(30, 0, 30);
 				scene.add(follower);
 
+				line = new THREE.Line3();
+				position = 0;
+
 				var cubeGeometry = new THREE.BoxGeometry (10,10,10);
     			var cubeMaterial = new THREE.MeshPhongMaterial ({color: 0xffffff, flatShading: true});
 				cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
-
-				//cube.position.set (15, 0, 15);
-				//cube.object.name = "cube";
+				cube.name = "dialog cube";
 				scene.add (cube);
 				
 				const gt = new THREE.TextureLoader().load( "./checker1.jpg" );
@@ -114,7 +120,7 @@
 				scene.add( ground );
 
 				// lights
-
+				
 				const dirLight1 = new THREE.DirectionalLight( 0xffffff );
 				dirLight1.position.set( -1, 1, 1 );
 				scene.add( dirLight1 );
@@ -128,6 +134,7 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 				window.addEventListener('click', clickHandler, false);
+				window.addEventListener('mousemove', moveHandler, false);
 			}
 			function clickHandler(event)
 			{
@@ -142,9 +149,30 @@
 				const intersects = raycaster.intersectObjects( scene.children );
 				//console.log(intersects);
 				if ( intersects.length == 1 ) {
-
+					// this is the movement code
 					marker.position.set (intersects[0].point.x, -1, intersects[0].point.z);
+					position = 0;
+					line.set(follower.position, marker.position);
 					scene.add (marker);
+					// 
+				}
+				else if(intersects.length > 1){
+					//	multiple items, 
+					//	special context clicks go here
+				}
+			}
+			function moveHandler(event){
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+				raycaster.setFromCamera( mouse, camera );
+
+				const intersects = raycaster.intersectObjects( scene.children );
+				//console.log(intersects);
+				if ( intersects.length == 1 ) {
+					document.body.style.cursor = "crosshair";
+				}
+				else{
+					document.body.style.cursor = "help";
 				}
 			}
 			function onWindowResize() {
@@ -155,21 +183,36 @@
 				renderer.setSize( window.innerWidth, window.innerHeight );
 
 			}
+			function move()
+			{
+				if(position < 1)
+				{ // still distance left to cross
+					let newPosition = new THREE.Vector3;
+					line.at(position, newPosition);
+					// get new position along line and move camera as well
+					let xDif = newPosition.x - follower.position.x;
+					let yDif = newPosition.y - follower.position.y;
+					let zDif = newPosition.z - follower.position.z;
+					camera.position.set(camera.position.x + xDif,camera.position.y + yDif, camera.position.z + zDif);
+					follower.position.set(newPosition.x, newPosition.y, newPosition.z);
+					position += 0.01;
+				}
+			}
+			function outputData()
+			{
+				console.log(line);
+			}
 			function animate() {
-				//updatePosition();
 				// TODO:
-				// calculate difference between x, y, and z of the marker & follower
-				// if different, move at a fixed speed to close the gap 
+				//	normalize movement speed
+				//	make targety locationy thing disappear on arrival
+				//	context clicks deliver text
+				//	
 				requestAnimationFrame( animate );
 
-				controls.target.set(cube.position.x, cube.position.y, cube.position.z);
-				/*i++;
-				if(i<2){
-					console.log(controls);
-					console.log(cube);
-				}*/
+				controls.target.set(follower.position.x, follower.position.y, follower.position.z);
 				controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
-				
+				move();
 				render();
 			}
 
