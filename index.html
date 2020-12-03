@@ -37,7 +37,7 @@
 				document.body.appendChild( renderer.domElement );
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 1000 );
-				camera.position.set( 100, 50, 0 );
+				camera.position.set( -100, 50, 100 );
 
 				// controls
 
@@ -71,7 +71,7 @@
 				marker = new THREE.Mesh (coneGeometry, coneMaterial);
     			coneMaterial = new THREE.MeshPhongMaterial ({color: "blue", flatShading: true});
 				follower = new THREE.Mesh(coneGeometry, coneMaterial);
-				follower.position.set(30, 0, 30);
+				follower.position.set(-30, 0, 30);
 				scene.add(follower);
 				marker.visible = false;
 
@@ -83,7 +83,7 @@
 				cube = new THREE.Mesh (cubeGeometry, cubeMaterial);
 				cube.name = "dialog cube";
 				scene.add (cube);
-				
+
 				const gt = new THREE.TextureLoader().load( "./img/checker1.jpg" );
 				const gg = new THREE.PlaneBufferGeometry( 16000, 16000 );
 				const gm = new THREE.MeshPhongMaterial( { color: 0xffffff, map: gt } );
