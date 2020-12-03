@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>gaem cuub</title>
+		<title>GAIM CÜB</title>
 		<meta charset="utf-8">
 		<link href="./img/favicon.ico" rel="icon" type="image/x-icon" />
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
@@ -10,7 +10,7 @@
 
 	<body>
 		<header>
-			<h1 id="name-label">GAEM CUUB</h1>
+			<h1 id="name-label">GAEM CÜB</h1>
 		</header>
 		<script type="module">
 			import * as THREE from './js/three.module.js';
@@ -18,7 +18,7 @@
 
 			let camera, controls, scene, renderer, cube, raycaster, INTERSECTED, marker, follower, line;
 			let mouse = new THREE.Vector2();
-			let coefficient, position;
+			let coefficient, position, clickPos;
 
 			let i = 0;
 			init();
@@ -73,6 +73,7 @@
 				follower = new THREE.Mesh(coneGeometry, coneMaterial);
 				follower.position.set(30, 0, 30);
 				scene.add(follower);
+				marker.visible = false;
 
 				line = new THREE.Line3();
 				position = 1;
@@ -114,32 +115,61 @@
 				scene.add( ambientLight );
 
 				window.addEventListener('resize', onWindowResize, false );
+				// mousedown events not working right now?
+				window.addEventListener('mousedown', _ => {console.log("ouch")});
+				//window.addEventListener('mouseup', clickHandler);
 				window.addEventListener('click', clickHandler, false);
+				//document.addEventListener("mousedown", _ => {console.log("ouch")});
 				window.addEventListener('touchend', clickHandler, false);
 				window.addEventListener('mousemove', moveHandler, false);
+				window.addEventListener('keydown', ONWARD, false);
+			}
+			function ONWARD(event){
+				// when you press Q the object move in the direction the camera is facing
+				if(event.keyCode == 81)
+					cube.translateOnAxis(new THREE.Vector3(camera.position.x,0,camera.position.z), -0.01);
+					//cube.rotateOnAxis(new THREE.Vector3(camera.position.x,0,camera.position.z), Math.PI/2);
+			}	
+			function logMouse(event)
+			{
+				console.log("HAAHAHHA");
+				clickPos = [event.clientX, event.clientY];
+				console.log(clickPos);
+			}
+			function diff (num1, num2) {
+				if (num1 > num2) {
+					return num1 - num2
+				} else {
+					return num2 - num1
+				}
 			}
 			function clickHandler(event)
 			{
-				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-				raycaster.setFromCamera( mouse, camera );
+				//let distance = (diff(event.clientX, clickPos[0])+diff(event.clientY, clickPos[1]));
+				//console.log(distance);
+				//if(distance < 250){
+					mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+					mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+					raycaster.setFromCamera( mouse, camera );
 
-				const intersects = raycaster.intersectObjects( scene.children );
-				//console.log(intersects);
-				if ( intersects.length == 1 ) {
-					// this is the movement code
-					marker.position.set (intersects[0].point.x, -1, intersects[0].point.z);
-					position = 0;
-					line.set(follower.position, marker.position);
-					scene.add (marker);
-					marker.visible = true;
-					// 
-				}
-				else if(intersects.length > 1){
-					console.log(intersects);
-					//	multiple items, 
-					//	special context clicks go here
-				}
+					const intersects = raycaster.intersectObjects( scene.children );
+					//console.log(intersects);
+					if ( intersects.length == 1 ) {
+						// this is the movement code
+						marker.position.set (intersects[0].point.x, -1, intersects[0].point.z);
+						position = 0;
+						line.set(follower.position, marker.position);
+						follower.lookAt(marker.position);
+						scene.add (marker);
+						marker.visible = true;
+						// 
+					}
+					else if(intersects.length > 1){
+						console.log(intersects);
+						//	multiple items, 
+						//	special context clicks go here
+					}
+				//}
 			}
 			function moveHandler(event){
 				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
@@ -148,12 +178,19 @@
 
 				const intersects = raycaster.intersectObjects( scene.children );
 				//console.log(intersects);
+				// TODO:
+				//	once object wrappers are in place,
+				//	iterate through
 				if ( intersects.length == 1 ) {
+					//		WALKABLE LOCATION
 					document.body.style.cursor = "crosshair";
 				}
 				else{
+					//		INVESTIGATE ITEM
 					document.body.style.cursor = "help";
 				}
+					//		TALK TO PERSON
+					//		ATTACK (?)
 			}
 			function onWindowResize() {
 
@@ -166,7 +203,8 @@
 			function move()
 			{
 				if(position < 1)
-				{ // still distance left to cross
+				{ // line.at() returns a newPosition Vector3 item
+				 //	 from a value from 0 -> 1 the position on the Line3
 					let newPosition = new THREE.Vector3;
 					line.at(position, newPosition);
 					// get new position along line and move camera as well
@@ -183,9 +221,11 @@
 				//	normalize movement speed
 				//	make targety locationy thing disappear on arrival
 				//	context clicks deliver text
+				//	spin game code into separate js file
 				// IDEAS:
 				//	have a game object wrapper to hold attributes & objects
-				//	
+				//	full screen opt in title page
+				//	localstorage data 
 				requestAnimationFrame( animate );
 
 				controls.target.set(follower.position.x, follower.position.y, follower.position.z);
@@ -200,8 +240,8 @@
 
 		</script>
 		<footer>
-			<h2>welcome to the gaem cuub! camera controls with WASD, click to move and investigate</h2>
-			<p>if you have any feedback, please forget it! </p>
+			<h2>welcome to the GAEM CÜB! camera controls with WASD, click to move and investigate</h2>
+			<p>if you have any feedback, please send it via psychic message asap! </p>
 		</footer>
 	</body>
 </html>
